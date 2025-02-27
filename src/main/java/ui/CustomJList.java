@@ -1,19 +1,21 @@
 package ui;
+import bean.Note;
+
 import javax.swing.*;
 import java.awt.*;
 //jdbc:mysql://localhost:3306
 // 自定义 JList 类
-public class CustomJList extends JList<String> {
+public class CustomJList extends JList<Note> {
 
     // 构造方法：传入 DefaultListModel
-    public CustomJList(DefaultListModel<String> listModel) {
+    public CustomJList(DefaultListModel<Note> listModel) {
         super(listModel);  // 调用父类 JList 构造方法初始化数据模型
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setCellRenderer(new NoteListCellRenderer());  // 设置自定义的渲染器
     }
 
     // 自定义 ListCellRenderer
-    static class NoteListCellRenderer implements ListCellRenderer<String> {
+    static class NoteListCellRenderer implements ListCellRenderer<Note> {
         private JPanel panel;
         private JLabel mainTextLabel;
         private JLabel timeLabel;
@@ -35,15 +37,10 @@ public class CustomJList extends JList<String> {
         }
 
         @Override
-        public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-            // 解析内容和时间
-            String[] parts = value.split(" - ");
-            String noteContent = parts[0];
-            String timestamp = (parts.length > 1) ? parts[1] : "";
-
-            // 设置主文本和时间
-            mainTextLabel.setText(noteContent);
-            timeLabel.setText(timestamp);
+        public Component getListCellRendererComponent(JList<? extends Note> list, Note note, int index, boolean isSelected, boolean cellHasFocus) {
+            // 设置标题和时间
+            mainTextLabel.setText(note.getTitle());  // 设置标题
+            timeLabel.setText(note.getCrateTime());  // 设置时间
 
             // 设置选中状态的背景和字体颜色
             if (isSelected) {

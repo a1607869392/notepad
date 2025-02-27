@@ -1,16 +1,20 @@
 package ui;
 
+import bean.Note;
+import control.NoteControl;
+
 import javax.swing.*;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Start {
-    static DefaultListModel<String> listModel = new DefaultListModel<>();
+    static DefaultListModel<Note> listModel = new DefaultListModel<>();
     static JMenuBar menuBar = new JMenuBar();
     static JTextArea textArea = new JTextArea();
     static ArrayList<String> arrayList = new ArrayList<>();
@@ -62,9 +66,9 @@ public class Start {
                 textArea.setText("");
                 selectedIndex = customJList.getSelectedIndex();
                 if (selectedIndex != -1) {
-                    if (arrayList.size()-1 >=selectedIndex) {
+                    if (arrayList.size() - 1 >= selectedIndex) {
                         textArea.setText(arrayList.get(selectedIndex));
-                    }else {
+                    } else {
                         textArea.setText("");
                     }
                 }
@@ -96,7 +100,8 @@ public class Start {
 
         menuItem2.addActionListener(e -> {
             if (textArea.getText().isEmpty()) {
-
+                // 如果文本框为空，提示用户
+                JOptionPane.showMessageDialog(null, "内容不能为空！");
             } else {
                 if (selectedIndex != -1) {
                     arrayList.set(selectedIndex, textArea.getText());
@@ -111,10 +116,11 @@ public class Start {
         menuBar.add(menu);
     }
 
-    private static void addListItem(DefaultListModel<String> listModel) {
-        String noteText = "Note " + (listModel.getSize() + 1) + " - " + getTime();
-        listModel.addElement(noteText);
-        String noteList =  "" ;
+    private static void addListItem(DefaultListModel<Note> listModel) {
+        String noteText = "Note " + (listModel.getSize() + 1) ;
+        int index = listModel.getSize()+1;
+        listModel.addElement(new Note(index,noteText,"",getTime()) );
+        String noteList = "";
         arrayList.add(noteList);
         // 自动选中新增的项
         customJList.setSelectedIndex(listModel.getSize() - 1);
@@ -142,16 +148,22 @@ public class Start {
         return formattedDate;
     }
 
-    private static void initList(DefaultListModel<String> listModel) {
+    private static void initList(DefaultListModel<Note> listModel) {
         // 模拟已保存的记事本内容（可以根据实际数据来加载）
-        ArrayList<String> savedNotes = new ArrayList<>();
+        NoteControl noteControl = new NoteControl();
+        ArrayList<Note> savedNotes = new ArrayList<>();
+        try {
+            savedNotes = noteControl.findAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         if (savedNotes.isEmpty()) {
-            savedNotes.add("Note 1 - 2025年2月25日");
+            savedNotes.add(new Note(1,"Note1","",getTime()));
             arrayList.add("");
         }
 
         // 加载模拟数据到 JList
-        for (String note : savedNotes) {
+        for (Note note : savedNotes) {
             listModel.addElement(note);
         }
 
