@@ -4,7 +4,11 @@ import bean.Note;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+/**
+ * 作者: 86199
+ * 描述: 数据持久层
+ * 日期: 2025/2/26
+ */
 public interface NoteDao {
     //查询
     public abstract ArrayList<Note> findAll() throws SQLException;

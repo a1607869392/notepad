@@ -3,8 +3,11 @@ import bean.Note;
 
 import javax.swing.*;
 import java.awt.*;
-//jdbc:mysql://localhost:3306
-// 自定义 JList 类
+/**
+ * 作者: 86199
+ * 描述: 自定义 JList 类
+ * 日期: 2025/2/25
+ */
 public class CustomJList extends JList<Note> {
 
     // 构造方法：传入 DefaultListModel

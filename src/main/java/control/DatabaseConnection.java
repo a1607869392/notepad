@@ -1,7 +1,11 @@
 package control;
 
 import java.sql.*;
-
+/**
+ * 作者: 86199
+ * 描述:用于连接的工具类
+ * 日期: 2025/2/27
+ */
 public class DatabaseConnection {
 
     public static Connection connect() throws SQLException {

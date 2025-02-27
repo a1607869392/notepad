@@ -3,7 +3,11 @@ package model;
 import bean.Note;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import /**
+ * 作者: 86199
+ * 描述: 业务层
+ * 日期: 2025/2/26
+ */java.util.ArrayList;
 
 public interface NoteService {
     //查询
