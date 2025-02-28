@@ -37,8 +37,6 @@ public class MainNote implements Login.LoginCallback{
      //   login.clearFile();
     }
 
-
-
     // 创建主界面
     private static void createMainWindow() {
         // 创建 JFrame
@@ -124,9 +122,11 @@ public class MainNote implements Login.LoginCallback{
         JMenuItem menuItem1 = new JMenuItem("撤回");
         JMenuItem menuItem2 = new JMenuItem("保存");
         JMenuItem menuItem3 = new JMenuItem("新建");
+        JMenuItem menuItem4 = new JMenuItem("ai助手");
         menu.add(menuItem1);
         menu.add(menuItem2);
         menu.add(menuItem3);
+        menu.add(menuItem4);
 
         // 添加菜单项
         JMenuItem deleteItem = new JMenuItem("删除");
@@ -158,6 +158,9 @@ public class MainNote implements Login.LoginCallback{
         });
         menuItem3.addActionListener(e -> {
             addListItem(listModel);
+        });
+        menuItem4.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> new ChatUI().setVisible(true));
         });
         // 点击删除时，移除选中的项
         deleteItem.addActionListener(e -> {
