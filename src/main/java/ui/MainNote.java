@@ -37,9 +37,7 @@ public class MainNote implements Login.LoginCallback{
      //   login.clearFile();
     }
 
-    public static void main(String[] args) {
-        new MainNote();
-    }
+
 
     // 创建主界面
     private static void createMainWindow() {
