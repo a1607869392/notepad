@@ -20,7 +20,7 @@ import java.util.Date;
  * 描述: 主界面
  * 日期: 2025/2/25
  */
-public class Start {
+public class MainNote implements Login.LoginCallback{
     static DefaultListModel<Note> listModel = new DefaultListModel<>();
     static JMenuBar menuBar = new JMenuBar();
     static JTextArea textArea = new JTextArea();
@@ -30,8 +30,19 @@ public class Start {
     static NoteControl noteControl = new NoteControl();
     // 创建右键菜单
     static JPopupMenu popupMenu = new JPopupMenu();
+   Login login;
+    public MainNote() {
+        // 创建登录界面并传入回调接口
+        login= new Login(this);  // 这里将 MainNote 作为 Login 的回调接口传入
+     //   login.clearFile();
+    }
 
     public static void main(String[] args) {
+        new MainNote();
+    }
+
+    // 创建主界面
+    private static void createMainWindow() {
         // 创建 JFrame
         JFrame frame = new JFrame();
         frame.setSize(500, 500);
@@ -41,6 +52,7 @@ public class Start {
         Image icon = Toolkit.getDefaultToolkit().getImage("G:\\code\\notepad\\src\\main\\resources\\textbook.png"); // 替换为图标文件的路径
         frame.setIconImage(icon);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         // 创建 SplitPane 左右分栏布局
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerLocation(150); // 设置左右分栏比例
@@ -54,18 +66,17 @@ public class Start {
         splitPane.setLeftComponent(listScrollPane);
 
         // 右侧文本编辑区域
-
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane textScrollPane = new JScrollPane(textArea);
         splitPane.setRightComponent(textScrollPane);
+
         // 创建 UndoManager 来管理撤回操作
         UndoManager undoManager = new UndoManager();
         // 监听文档变化并记录撤回操作
         textArea.getDocument().addUndoableEditListener(e -> undoManager.addEdit(e.getEdit()));
 
-        //上方菜单栏
-
+        // 上方菜单栏
         initMenu(menuBar, undoManager);
         frame.setJMenuBar(menuBar);
 
@@ -83,6 +94,7 @@ public class Start {
                 }
             }
         });
+
         // 为 JList 添加鼠标监听器，右键点击时弹出菜单
         customJList.addMouseListener(new MouseAdapter() {
             @Override
@@ -118,7 +130,6 @@ public class Start {
         menu.add(menuItem2);
         menu.add(menuItem3);
 
-
         // 添加菜单项
         JMenuItem deleteItem = new JMenuItem("删除");
 
@@ -149,7 +160,6 @@ public class Start {
         });
         menuItem3.addActionListener(e -> {
             addListItem(listModel);
-
         });
         // 点击删除时，移除选中的项
         deleteItem.addActionListener(e -> {
@@ -188,7 +198,6 @@ public class Start {
             textArea.setText("");  // 清空文本框
         });
     }
-
 
     // 获取当前时间
     private static String getTime() {
@@ -229,9 +238,16 @@ public class Start {
         for (Note note : savedNotes) {
             listModel.addElement(note);
         }
-
     }
 
+    @Override
+    public void onLoginSuccess() {
+        createMainWindow();
+        login.dispose();
+    }
 
+    @Override
+    public void onLoginFailure() {
+    }
 }
 
