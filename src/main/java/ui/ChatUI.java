@@ -53,12 +53,7 @@ public class ChatUI extends JFrame {
         sendButton = new JButton("发送");
 
         // 发送按钮事件
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendMessage();
-            }
-        });
+        sendButton.addActionListener(e -> sendMessage());
 
         inputPanel.add(inputField, BorderLayout.CENTER);
         inputPanel.add(sendButton, BorderLayout.EAST);
@@ -90,13 +85,10 @@ public class ChatUI extends JFrame {
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         // 读取响应体并关闭流
                         String responseBody = response.body().string();
-
                         // 输出响应体
                         System.out.println(responseBody);
-
                         // 使用读取的字符串内容解析 JSON
                         Content content = gson.fromJson(responseBody, Content.class);
-
                         // 调用方法处理解析后的内容
                         appendMessage(content.getContent(), false);
                     }
@@ -126,9 +118,5 @@ public class ChatUI extends JFrame {
         chatArea.setCaretPosition(chatArea.getDocument().getLength());
     }
 
-    public static void main(String[] args) {
-        // 在事件调度线程中运行 UI
-        SwingUtilities.invokeLater(() -> new ChatUI().setVisible(true));
 
-    }
 }
