@@ -54,7 +54,9 @@ public class Login {
         vBox.add(panel01);
         vBox.add(panel02);
         vBox.add(panel03);
-
+        // 设置自定义图标
+        Image icon = Toolkit.getDefaultToolkit().getImage("G:\\code\\notepad\\src\\main\\resources\\textbook.png"); // 替换为图标文件的路径
+        frame.setIconImage(icon);
         frame.setContentPane(vBox);
 
         // 登录按钮事件

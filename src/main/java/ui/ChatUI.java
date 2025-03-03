@@ -31,7 +31,9 @@ public class ChatUI extends JFrame {
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // 窗口居中
-
+        // 设置自定义图标
+        Image icon = Toolkit.getDefaultToolkit().getImage("G:\\code\\notepad\\src\\main\\resources\\textbook.png"); // 替换为图标文件的路径
+        this.setIconImage(icon);
         // 初始化组件
         initComponents();
     }
@@ -90,7 +92,7 @@ public class ChatUI extends JFrame {
                         // 使用读取的字符串内容解析 JSON
                         Content content = gson.fromJson(responseBody, Content.class);
                         // 调用方法处理解析后的内容
-                        appendMessage(content.getContent(), false);
+                        appendMessage("ai回答:"+content.getContent(), false);
                     }
                 });
 
@@ -101,7 +103,6 @@ public class ChatUI extends JFrame {
     }
 
 
-    // 添加消息到聊天区域
     private void appendMessage(String message, boolean isRightAligned) {
         // 设置对齐方式
         if (isRightAligned) {
@@ -110,12 +111,11 @@ public class ChatUI extends JFrame {
             chatArea.setAlignmentX(JTextArea.LEFT_ALIGNMENT);
         }
 
-        // 添加消息
-        SwingUtilities.invokeLater(() -> chatArea.append(message + "\n"));
-
-
-        // 滚动到底部
-        chatArea.setCaretPosition(chatArea.getDocument().getLength());
+        // 在 EDT 线程中更新 UI
+        SwingUtilities.invokeLater(() -> {
+            chatArea.append(message + "\n");
+            chatArea.setCaretPosition(chatArea.getDocument().getLength()); // 确保滚动条也在主线程更新
+        });
     }
 
 
