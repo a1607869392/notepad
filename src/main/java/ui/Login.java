@@ -17,6 +17,8 @@ public class Login {
     public static JLabel label2 = new JLabel("密   码");
     public static JPasswordField password = new JPasswordField(10);
     public static JButton Signinbtn = new JButton("登录");
+    public static JButton resetButton = new JButton("重置"); // 新增重置按钮
+
     private LoginCallback callback;  // 用于回调的接口
 
     // 静态变量表示登录状态
@@ -49,6 +51,7 @@ public class Login {
 
         JPanel panel03 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel03.add(Signinbtn);
+        panel03.add(resetButton);
 
         Box vBox = Box.createVerticalBox();
         vBox.add(panel01);
@@ -81,7 +84,22 @@ public class Login {
                 callback.onLoginFailure();
             }
         });
+     resetButton.addActionListener(e -> {
+         int choice = JOptionPane.showConfirmDialog(
+                 frame,
+                 "确定要清空所有账号数据吗？",  // 提示内容
+                 "确认清空",               // 标题
+                 JOptionPane.YES_NO_OPTION  // 按钮选项（是/否）
+         );
 
+         if (choice == JOptionPane.YES_OPTION) {
+             clearFile(); // 清空文件
+             username.setText(""); // 清空用户名输入框
+             password.setText(""); // 清空密码输入框
+             JOptionPane.showMessageDialog(frame, "账号数据已清空！");
+         }
+
+     });
 
     }
 

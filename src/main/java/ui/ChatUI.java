@@ -29,8 +29,9 @@ public class ChatUI extends JFrame {
         // 设置窗口标题
         setTitle("聊天界面");
         setSize(500, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null); // 窗口居中
+
         // 设置自定义图标
         Image icon = Toolkit.getDefaultToolkit().getImage("G:\\code\\notepad\\src\\main\\resources\\textbook.png"); // 替换为图标文件的路径
         this.setIconImage(icon);
@@ -85,7 +86,6 @@ public class ChatUI extends JFrame {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        // 读取响应体并关闭流
                         String responseBody = response.body().string();
                         // 输出响应体
                         System.out.println(responseBody);
@@ -111,7 +111,6 @@ public class ChatUI extends JFrame {
             chatArea.setAlignmentX(JTextArea.LEFT_ALIGNMENT);
         }
 
-        // 在 EDT 线程中更新 UI
         SwingUtilities.invokeLater(() -> {
             chatArea.append(message + "\n");
             chatArea.setCaretPosition(chatArea.getDocument().getLength()); // 确保滚动条也在主线程更新

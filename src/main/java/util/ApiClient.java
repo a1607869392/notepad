@@ -45,9 +45,9 @@ public class ApiClient {
                 "  \"top_logprobs\": null\n" +
                 "}";
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)  // 设置连接超时
-                .readTimeout(30, TimeUnit.SECONDS)     // 设置读取超时
-                .writeTimeout(30, TimeUnit.SECONDS)    // 设置写入超时
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
 
         MediaType mediaType = MediaType.parse("application/json");
