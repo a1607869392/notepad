@@ -16,8 +16,6 @@ import util.ApiClient;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class ChatUI extends JFrame {
@@ -25,6 +23,8 @@ public class ChatUI extends JFrame {
     private JTextField inputField; // 输入消息的文本框
     private JButton sendButton; // 发送按钮
     private Gson gson = new Gson();
+    private JDialog loadingDialog; // 加载对话框
+
     public ChatUI() {
         // 设置窗口标题
         setTitle("聊天界面");
@@ -73,33 +73,70 @@ public class ChatUI extends JFrame {
         if (!message.isEmpty()) {
             // 显示自己发送的消息（右侧）
             appendMessage("我: " + message, true);
-
             // 清空输入框
             inputField.setText("");
+
+            // 显示加载对话框
+            showLoadingDialog();
 
             try {
                 ApiClient.search(message, new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         e.printStackTrace();
+                        hideLoadingDialog(); // 请求失败时隐藏加载框
+                        appendMessage("服务器返回: 请求错误，检查网络或服务器繁忙" , false);
+
                     }
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String responseBody = response.body().string();
-                        // 输出响应体
                         System.out.println(responseBody);
-                        // 使用读取的字符串内容解析 JSON
+
                         Content content = gson.fromJson(responseBody, Content.class);
-                        // 调用方法处理解析后的内容
-                        appendMessage("ai回答:"+content.getContent(), false);
+                        appendMessage("ai回答: " + content.getContent(), false);
+
+                        // 请求完成后隐藏加载框
+                        hideLoadingDialog();
                     }
                 });
 
             } catch (Exception e) {
+                hideLoadingDialog(); // 避免异常导致加载框不消失
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    // 显示加载对话框
+    private void showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = new JDialog(this, "加载中", true);
+            loadingDialog.setSize(200, 100);
+            loadingDialog.setLocationRelativeTo(this);
+            loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+            JPanel panel = new JPanel(new BorderLayout());
+            JLabel label = new JLabel("正在加载，请稍候...", JLabel.CENTER);
+            JProgressBar progressBar = new JProgressBar();
+            progressBar.setIndeterminate(true); // 显示无限循环的进度条
+
+            panel.add(label, BorderLayout.NORTH);
+            panel.add(progressBar, BorderLayout.CENTER);
+            loadingDialog.add(panel);
+        }
+
+        SwingUtilities.invokeLater(() -> loadingDialog.setVisible(true));
+    }
+
+    // 隐藏加载对话框
+    private void hideLoadingDialog() {
+        SwingUtilities.invokeLater(() -> {
+            if (loadingDialog != null) {
+                loadingDialog.setVisible(false);
+            }
+        });
     }
 
 

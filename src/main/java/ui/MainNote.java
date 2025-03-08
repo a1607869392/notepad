@@ -34,7 +34,6 @@ public class MainNote implements Login.LoginCallback{
     public MainNote() {
         // 创建登录界面并传入回调接口
         login= new Login(this);  // 这里将 MainNote 作为 Login 的回调接口传入
-     //   login.clearFile();
     }
 
     // 创建主界面
